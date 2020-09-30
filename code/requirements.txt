@@ -1,0 +1,11 @@
+cryptography    # Some block ciphers and RSA key generation
+jsonlines       # Data loading format
+matplotlib      # Plotting
+numpy           # Statistics
+PyCryptodome    # RSA OAEP mode
+pymongo         # Connect to MongoDB
+qcore           # Accurate timing/benchmarking
+tqdm            # Progress bars uWu
+py-abac         # ABAC framework to compare with CP-ABE
+py-abac[mongo]  # ABAC state mgmt
+py-abac[sql]    # ABAC state mgmt
