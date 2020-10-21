@@ -1,0 +1,17 @@
+# pack-refs with: peeled fully-peeled sorted 
+75428203806927814250f9d18f760c1476439ca6 refs/remotes/origin/2.7-dev
+eeeb7077c2f097b761ca1057c2ff7e3d435c9754 refs/remotes/origin/2.7-master
+5eb55951b491b5a5a5d85768d89090042daa7e69 refs/remotes/origin/auto-tools
+48930240573d87d1b06d7504cff41916ce40d28d refs/remotes/origin/dev
+3cf44765383454a432cc85d7b3b53416e8b160bd refs/remotes/origin/dev-update-changelog
+eeb21bfb10a0f4c09a2368f3e5dbc37febbb8446 refs/remotes/origin/gh-pages
+8dac3e81ec5819f02d6fbe765e1aa1fed90685e9 refs/remotes/origin/gh-pages-050
+9e992319048e1da52efaaf1148766b9083204834 refs/remotes/origin/jenkins
+de117d04b99d483fccaf74b298803499d89d85bc refs/remotes/origin/master
+f6428b1e0be44129160e23f0694631b6144078cd refs/remotes/origin/patch-1
+e3a58ae0e58a780cfc4f53ff4a17b701cce465b7 refs/remotes/origin/patch-2
+e9a01af1fb1f2a0225c36d105a8b9f26a6360dee refs/tags/v0.3-2.7
+^aec8d89f91e6d9654f6ab60f20099b45b3ce1296
+ce27ff26104502104ab8f1347151cde2c64885ea refs/tags/v0.3-3
+^5d662eca8650e3b3da200da60ade218886419403
+42e38b121edce8d9dad111a6ac919b420f6b1482 refs/tags/v0.43
