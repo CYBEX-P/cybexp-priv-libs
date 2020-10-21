@@ -2,7 +2,7 @@ import ctypes
 import struct
 import traceback 
 
-orelib = ctypes.cdll.LoadLibrary("./ore.so")
+orelib = ctypes.cdll.LoadLibrary("../fastore-lib/ore.so")
 
 
 class PrintableCtypesStructure(ctypes.Structure):
@@ -162,6 +162,23 @@ class ORECiphertext(ctypes.Structure):
         ("buf", ctypes.c_char_p),
         ("params", OREParams),
     ]
+
+    # # netowrk(big-endian), bool, + char*ore_ciphertext_size(buf), +params
+    # struct_format = "!?"
+    # struct_params_size = 9 #bytes
+
+    # @classmethod
+    # def export(cls):
+    #     buf_size = ore_ciphertext_size(self.params)
+
+    #     raw_me = struct.pack(cls.struct_format, self.initialized)
+    #     raw_params = self.params.export()
+    #     raw_buf = struct.pack('!'+'B'*buf_size,*[self.buf[i] for i in range(buf_size)])
+
+    #     return raw_me + raw_params + raw_buf
+
+
+
 
 
 class ORELibError(Exception):

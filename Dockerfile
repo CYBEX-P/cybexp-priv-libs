@@ -26,8 +26,8 @@ RUN cd /usr/local/src/ && \
 RUN ldconfig -v
 
 # compile ore
-COPY ./code/fastore /code/fastore
-RUN cd /code/fastore && make clean lib
+COPY ./code/fastore-lib /code/fastore-lib
+RUN cd /code/fastore-lib && make clean lib
 
 # misc
 RUN mkdir /secrets
