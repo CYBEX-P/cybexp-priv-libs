@@ -50,19 +50,37 @@ def rsa_key(key_sz: int = 2048, pswd_pemfile: Optional[str] = None):
         format=serialization.PrivateFormat.PKCS8,
         encryption_algorithm=keyenc_alg,
     )
-    print("-"*50)
-    print(pem)
-    print("-"*50)
-    return RSA.importKey(pem, passphrase=pswd_pemfile)
+
+    public_key = private_key.public_key()
+    pem_pub = public_key.public_bytes(
+       encoding=serialization.Encoding.PEM,
+       format=serialization.PublicFormat.SubjectPublicKeyInfo,
+       # format=serialization.PublicFormat.PKCS8,
+       # encryption_algorithm=keyenc_alg,
+    )
+
+
+
+    # print("-"*50)
+    # print(pem)
+    # print("-"*50)
+    # print(pem_pub)
+    # print("-"*50)
+
+    # return RSA.importKey(pem_pub, passphrase=pswd_pemfile)
+    return pem_pub
+
 
 
 class RSADOAEP(DEAlgorithm):
-    def __init__(self, key_sz_bits: int, rsa_k=None):
+    def __init__(self, key_sz_bits: int, pswd_pemfile:Optional[str] = None, rsa_k=None):
         # Use PKCS-OAEP cipher mode for RSA. Maximum plaintext size has to fit into modulus size.
         if not rsa_k:
-            self.k = rsa_key(key_sz_bits)
+            self.k = rsa_key(key_sz_bits, pswd_pemfile=pswd_pemfile)
         else:
             self.k = rsa_k
+
+        self.k = RSA.importKey(self.k, passphrase=pswd_pemfile)
 
         self.cipher = PKCS1_OAEP.new(self.k)
         self.name = f"RSA-DOAEP-{key_sz_bits}"

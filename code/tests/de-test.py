@@ -5,7 +5,7 @@
 
 # Generate CP-ABE secret keys for each organization
 
-from de_pub import RSADOAEP,AESSIV, AESCBC, AESCMC
+from de import RSADOAEP,AESSIV, AESCBC, AESCMC
 import secrets
 
 import jsonlines
@@ -54,6 +54,7 @@ print("=" * 25, "party 2", "="*25)
 
 enc_alg = RSADOAEP(key_sz_bits=2048, rsa_k=k)
 enc2 = enc_alg.encrypt(dat)
+print(type(enc2))
 
 print(enc2)
 

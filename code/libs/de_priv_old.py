@@ -50,24 +50,10 @@ def rsa_key(key_sz: int = 2048, pswd_pemfile: Optional[str] = None):
         format=serialization.PrivateFormat.PKCS8,
         encryption_algorithm=keyenc_alg,
     )
-
-    public_key = private_key.public_key()
-    pem_pub = public_key.public_bytes(
-       encoding=serialization.Encoding.PEM,
-       format=serialization.PublicFormat.SubjectPublicKeyInfo,
-       # format=serialization.PublicFormat.PKCS8,
-       encryption_algorithm=keyenc_alg,
-    )
-
-
-
     print("-"*50)
     print(pem)
     print("-"*50)
-    print(pem_pub)
-    print("-"*50)
-
-    return RSA.importKey(pem_pub, passphrase=pswd_pemfile)
+    return RSA.importKey(pem, passphrase=pswd_pemfile)
 
 
 class RSADOAEP(DEAlgorithm):
