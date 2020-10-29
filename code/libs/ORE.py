@@ -166,10 +166,11 @@ class ORECiphertext(ctypes.Structure):
     # # netowrk(big-endian), bool, + char*ore_ciphertext_size(buf), +params
     # struct_format = "!?"
     # struct_params_size = 9 #bytes
+    # struct_total_min = 10 # bytes
 
     # @classmethod
     # def export(cls):
-    #     buf_size = ore_ciphertext_size(self.params)
+    #     buf_size = orelib.ore_ciphertext_size(self.params)
 
     #     raw_me = struct.pack(cls.struct_format, self.initialized)
     #     raw_params = self.params.export()
@@ -177,6 +178,44 @@ class ORECiphertext(ctypes.Structure):
 
     #     return raw_me + raw_params + raw_buf
 
+
+
+    # @classmethod
+    # def unpack_vals(cls, raw_bytes):
+    #     try:
+    #         if len(raw_bytes) < cls.struct_total_min:
+    #             return None
+    #         raw_me = raw_bytes[:1]
+    #         raw_params = raw_bytes[1:10]
+    #         raw_buff = raw_bytes[10:]
+
+    #         me = struct.unpack(cls.struct_format,raw_me)
+    #         params = OREParams.unpack_vals(raw_params)
+
+    #         buf_size = orelib.ore_ciphertext_size(params)
+    #         if buf_size != len(raw_buff):
+    #             return None
+
+    #         buff = struct.unpack('!'+'B'*buf_size,raw_buff)
+
+    #         charArray = ctypes.c_char * buf_size
+    #         buff_c = charArray(*buff)
+
+    #         buff_p = ctypes.c_char_p(buff_c)
+
+    #         return (me,buff_p,params)
+    #     except:
+    #         traceback.print_exc()
+    #         print("error")
+    #         return None
+
+
+    # @classmethod
+    # def from_raw_bytes(cls, raw_bytes):
+    #     vals = cls.unpack_vals(raw_bytes)
+    #     param_obj = OREParams(*vals[2])
+
+    #     return cls(vals[0],vals[1], param_obj)
 
 
 
