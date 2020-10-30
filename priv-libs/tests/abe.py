@@ -2,7 +2,8 @@
 # coding: utf-8
 
 
-
+import sys
+sys.path.append("/priv-libs/libs")
 
 from cpabew import CPABEAlg
 import jsonlines

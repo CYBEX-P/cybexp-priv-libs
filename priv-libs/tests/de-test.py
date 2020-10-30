@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import sys
+sys.path.append("/priv-libs/libs")
 
 
 # Generate CP-ABE secret keys for each organization
@@ -11,6 +13,7 @@ import secrets
 import jsonlines
 from tqdm import tqdm
 from pprint import pprint
+
 
 
 

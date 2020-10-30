@@ -9,13 +9,13 @@ RUN wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && tar xvf pbc-
 COPY ./charm /charm
 RUN cd /charm && ./configure.sh --static  && make && make install && ldconfig
 
-COPY ./code/requirements.txt /code/requirements.txt
+COPY ./priv-libs/requirements.txt /priv-libs/requirements.txt
 
 # setup environment & install dependencies
-RUN cd /code 
+RUN cd /priv-libs 
 #RUN python3 -m venv env  
-#RUN /code/env/bin/pip3 install -r requirements.txt
-RUN pip3 install -r /code/requirements.txt
+#RUN /priv-libs/env/bin/pip3 install -r requirements.txt
+RUN pip3 install -r /priv-libs/requirements.txt
 
 # install openssl
 RUN cd /usr/local/src/ && \
@@ -26,15 +26,15 @@ RUN cd /usr/local/src/ && \
 RUN ldconfig -v
 
 # compile ore
-COPY ./code/fastore-lib /code/fastore-lib
-RUN cd /code/fastore-lib && make clean lib
+COPY ./priv-libs/fastore-lib /priv-libs/fastore-lib
+RUN cd /priv-libs/fastore-lib && make clean lib
 
 # misc
 RUN mkdir /secrets
-WORKDIR /code
+WORKDIR /priv-libs
 
-# copy code last
-COPY ./code /code
+# copy priv-libs last
+COPY ./priv-libs /priv-libs
 
 
-# --prefix=/code/env/lib/python3.6/site-packages
+# --prefix=/priv-libs/env/lib/python3.6/site-packages
