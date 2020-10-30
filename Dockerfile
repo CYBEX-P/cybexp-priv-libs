@@ -30,7 +30,7 @@ COPY ./priv-libs/fastore-lib /priv-libs/fastore-lib
 RUN cd /priv-libs/fastore-lib && make clean lib
 
 # misc
-RUN mkdir /secrets
+RUN mkdir -p /secrets
 WORKDIR /priv-libs
 
 # copy priv-libs last
