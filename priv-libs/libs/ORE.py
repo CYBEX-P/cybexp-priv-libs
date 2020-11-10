@@ -1,8 +1,10 @@
+#!/usr/bin/env python3 
+
 import ctypes
 import struct
 import traceback 
 
-orelib = ctypes.cdll.LoadLibrary("../fastore-lib/ore.so")
+orelib = ctypes.cdll.LoadLibrary("/priv-libs/fastore-lib/ore.so")
 
 
 class PrintableCtypesStructure(ctypes.Structure):
@@ -37,6 +39,14 @@ class OREParams(ctypes.Structure):
 
     def export(self):
         return struct.pack(self.struct_format,self.initialized, self.nbits, self.out_blk_len)
+
+
+    def buff_size(self):
+        return (self.nbits * self.out_blk_len + 7) // 8;
+    
+    @classmethod
+    def buff_size_from_unpacked_vals(cls,tup):
+        return (tup[1] * tup[2] + 7) // 8;
 
     @classmethod
     def unpack_vals(cls, raw_bytes):
@@ -163,59 +173,68 @@ class ORECiphertext(ctypes.Structure):
         ("params", OREParams),
     ]
 
-    # # netowrk(big-endian), bool, + char*ore_ciphertext_size(buf), +params
-    # struct_format = "!?"
-    # struct_params_size = 9 #bytes
-    # struct_total_min = 10 # bytes
+    # netowrk(big-endian), bool, + char*ore_ciphertext_size(buf), +params
+    struct_format = "!?"
+    struct_params_size = 9 #bytes
+    struct_total_min = 10 # bytes
 
-    # @classmethod
-    # def export(cls):
-    #     buf_size = orelib.ore_ciphertext_size(self.params)
-
-    #     raw_me = struct.pack(cls.struct_format, self.initialized)
-    #     raw_params = self.params.export()
-    #     raw_buf = struct.pack('!'+'B'*buf_size,*[self.buf[i] for i in range(buf_size)])
-
-    #     return raw_me + raw_params + raw_buf
+    def export(self):
+        # params = OREParams(self.params)
+        params = self.params
+        buf_size = params.buff_size()
+        print(buf_size)
+        # print(params.initialized,params.nbits,params.out_blk_len)
 
 
 
-    # @classmethod
-    # def unpack_vals(cls, raw_bytes):
-    #     try:
-    #         if len(raw_bytes) < cls.struct_total_min:
-    #             return None
-    #         raw_me = raw_bytes[:1]
-    #         raw_params = raw_bytes[1:10]
-    #         raw_buff = raw_bytes[10:]
+        raw_me = struct.pack(self.struct_format, self.initialized)
+        raw_params = params.export()
+        # print("raw", raw_params)
+        # print(type(self.buf))
+        raw_buf = struct.pack('!'+'B'*buf_size,*[self.buf[i] for i in range(buf_size)])
 
-    #         me = struct.unpack(cls.struct_format,raw_me)
-    #         params = OREParams.unpack_vals(raw_params)
-
-    #         buf_size = orelib.ore_ciphertext_size(params)
-    #         if buf_size != len(raw_buff):
-    #             return None
-
-    #         buff = struct.unpack('!'+'B'*buf_size,raw_buff)
-
-    #         charArray = ctypes.c_char * buf_size
-    #         buff_c = charArray(*buff)
-
-    #         buff_p = ctypes.c_char_p(buff_c)
-
-    #         return (me,buff_p,params)
-    #     except:
-    #         traceback.print_exc()
-    #         print("error")
-    #         return None
+        return raw_me + raw_params + raw_buf
 
 
-    # @classmethod
-    # def from_raw_bytes(cls, raw_bytes):
-    #     vals = cls.unpack_vals(raw_bytes)
-    #     param_obj = OREParams(*vals[2])
 
-    #     return cls(vals[0],vals[1], param_obj)
+    @classmethod
+    def unpack_vals(cls, raw_bytes):
+        try:
+            if len(raw_bytes) < cls.struct_total_min:
+                return None
+            raw_me = raw_bytes[:1]
+            raw_params = raw_bytes[1:10]
+            raw_buff = raw_bytes[10:]
+
+            me = struct.unpack(cls.struct_format,raw_me)
+            params = OREParams.unpack_vals(raw_params)
+            # print(params)
+            buf_size = OREParams.buff_size_from_unpacked_vals(params)
+            # print(buf_size)
+            if buf_size != len(raw_buff):
+                return None
+
+            buff = struct.unpack('!'+'B'*buf_size,raw_buff)
+
+            bytes_buff = bytes(buff)
+
+            if buf_size == 0:
+                raise
+            buff_p = ctypes.c_char_p(bytes_buff)
+
+            return (me,buff_p,params)
+        except:
+            traceback.print_exc()
+            print("error")
+            return None
+
+
+    @classmethod
+    def from_raw_bytes(cls, raw_bytes):
+        vals = cls.unpack_vals(raw_bytes)
+        param_obj = OREParams(*vals[2])
+
+        return cls(vals[0],vals[1], param_obj)
 
 
 
@@ -253,6 +272,7 @@ class OREComparable:
     def __init__(self, ciphertext_obj: ORECiphertext):
         ct_is_ready = ciphertext_obj.params.initialized and ciphertext_obj.initialized
         # TODO: This doesn't verify that the CT obj is actually a CT
+        # print(ciphertext_obj)
         assert ct_is_ready, "Comparable must use an initialized ct."
         self.ciphertext_obj = ciphertext_obj
 
@@ -287,6 +307,8 @@ class OREComparable:
         return self._cmp(other) == -1
 
     def __eq__(self, other):
+        comp = self._cmp(other)
+        print(comp)
         return self._cmp(other) == 0
 
     def _cmp(self, other: "OREComparable") -> int:
@@ -304,86 +326,9 @@ class OREComparable:
 
         return res.value
 
+    def get_cipher_obj(self):
+        return self.ciphertext_obj
 
 
 
-# def local_test():
-#     secret_key = ORESecretKey()
-#     print(secret_key)
-    
-#     orelib.ore_setup(ctypes.byref(secret_key), ctypes.byref(default_ore_params()))
 
-#     vals = [
-#         (chr(c), OREComparable.from_int(c - 96, secret_key))
-#         for c in range(ord("a"), ord("z") + 1)
-#     ]
-
-#     import random
-
-#     random.shuffle(vals)
-#     # print(vals)
-
-#     assert sorted(vals, key=lambda tupl: tupl[1]) == sorted(
-#         vals, key=lambda tupl: tupl[0]
-#     )
-
-#     print("Local Test Passed!")
-#     e = secret_key.export()
-#     print()
-#     print(e)
-#     print()
-#     s2 = ORESecretKey.from_raw_bytes(e)
-#     print(s2)
-
-
-def exp_k_test_helper(secret_key:ORESecretKey=ORESecretKey.from_random()):
-
-    vals = [
-        (chr(c), OREComparable.from_int(c - 96, secret_key))
-        for c in range(ord("a"), ord("z") + 1)
-    ]
-
-    import random
-
-    random.shuffle(vals)
-    # print(vals)
-
-    vals_sort_enc = sorted(vals, key=lambda tupl: tupl[1])
-    vals_sort_char = sorted( vals, key=lambda tupl: tupl[0])
-    assert  vals_sort_enc == vals_sort_char, "encrypted and raw values where not sorted correctly"
-    return (vals, vals_sort_enc,vals_sort_char )
-
-
-def export_key_test():
-    import pickle
-
-    secret_key = ORESecretKey.from_random()
-
-    print("rand key: ", secret_key)
-
-    print("testing key before exporting it.")
-    vals1 = exp_k_test_helper(secret_key)
-    print("passed")
-    exported_key = secret_key.export()
-
-    pickle.dump(exported_key,open( "secretkey.bin", "wb" ))
-    exp_key2 = pickle.load(open( "secretkey.bin", "rb" ))
-
-    s2 = ORESecretKey.from_raw_bytes(exp_key2)
-    print("imported key: ",s2)
-    print()
-    print("testing imported key")
-    vals2 = exp_k_test_helper(s2)
-    print("passed\n")
-
-
-    # print(vals1)
-    # print(vals2)
-    # print("comparing encrypted values")
-    # assert vals1 == vals2, "encrypted vals are not the same"
-    # prnit("passed")
-
-
-if __name__ == "__main__":
-    exp_k_test_helper()
-    export_key_test()
