@@ -47,7 +47,7 @@ deterministic_encryption_algo = RSADOAEP(key_sz_bits=2048)
 enc1 = deterministic_encryption_algo.encrypt(dat)
 print(enc1)
 
-k = deterministic_encryption_algo.export_key()
+k_pem= deterministic_encryption_algo.export_key()
 # pprint(record)
 
 
@@ -55,7 +55,7 @@ k = deterministic_encryption_algo.export_key()
 # party 2
 print("=" * 25, "party 2", "="*25)
 
-enc_alg = RSADOAEP(key_sz_bits=2048, rsa_k=k)
+enc_alg = RSADOAEP(key_sz_bits=2048, rsa_pem=k_pem)
 enc2 = enc_alg.encrypt(dat)
 print(type(enc2))
 

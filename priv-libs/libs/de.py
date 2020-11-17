@@ -73,14 +73,14 @@ def rsa_key(key_sz: int = 2048, pswd_pemfile: Optional[str] = None):
 
 
 class RSADOAEP(DEAlgorithm):
-    def __init__(self, key_sz_bits: int, pswd_pemfile:Optional[str] = None, rsa_k=None):
+    def __init__(self, key_sz_bits: int, pswd_pemfile:Optional[str] = None, rsa_pem=None):
         # Use PKCS-OAEP cipher mode for RSA. Maximum plaintext size has to fit into modulus size.
-        if not rsa_k:
-            self.k = rsa_key(key_sz_bits, pswd_pemfile=pswd_pemfile)
+        if not rsa_pem:
+            self.rsa_pem = rsa_key(key_sz_bits, pswd_pemfile=pswd_pemfile)
         else:
-            self.k = rsa_k
+            self.rsa_pem = rsa_pem
 
-        self.k = RSA.importKey(self.k, passphrase=pswd_pemfile)
+        self.k = RSA.importKey(self.rsa_pem, passphrase=pswd_pemfile)
 
         self.cipher = PKCS1_OAEP.new(self.k)
         self.name = f"RSA-DOAEP-{key_sz_bits}"
@@ -92,7 +92,7 @@ class RSADOAEP(DEAlgorithm):
         return ciphertext
 
     def export_key(self):
-        return self.k
+        return self.rsa_pem
 
 class AESSIV(DEAlgorithm):
     name = "AES-SIV"

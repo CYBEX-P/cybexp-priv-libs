@@ -1,5 +1,5 @@
-import sys
-sys.path.append("/home/nacho/Projects/cybexp-privacy/charm-build/charm")
+# import sys
+# sys.path.append("/home/nacho/Projects/cybexp-privacy/charm-build/charm")
 
 import pickle
 from typing import Any, Dict, List, Union
@@ -70,7 +70,7 @@ class CPABEAlg:
 
     def serialize_charm_obj(self, charm_obj):
         pkl = self._serialize_charm_obj(charm_obj)
-        print("pikling:", pkl)
+        # print("pikling:", pkl)
         return pickle.dumps(pkl)
 
     def deserialize_charm_obj(self, charm_obj):

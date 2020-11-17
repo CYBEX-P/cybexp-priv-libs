@@ -13,7 +13,7 @@ if [ "$DOCKER_STATE" = "inactive" ]; then
    sudo systemctl start docker
    exec $0
 elif [ "$DOCKER_STATE" = "active" ]; then
-   sudo docker build -t $IMAGE_NAME $DOCKERFILE_LOC && sudo docker run -it $IMAGE_NAME /bin/bash
+   sudo docker build -t $IMAGE_NAME $DOCKERFILE_LOC && sudo docker run -v $FULL_PATH/secrets:/secrets/ -it $IMAGE_NAME /bin/bash
    DOCKER_ID=`docker ps --all | grep $IMAGE_NAME | awk '{print $1}'`
    echo "Removing container"
    # sudo docker stop $DOCKER_ID
