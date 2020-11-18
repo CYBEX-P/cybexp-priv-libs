@@ -56,7 +56,7 @@ class OREParams(ctypes.Structure):
             vals = struct.unpack(cls.struct_format,raw_bytes)
             return vals
         except:
-            print("error")
+            # print("error")
             return None
 
     @classmethod
@@ -108,7 +108,7 @@ class PRFKey(ctypes.Structure):
             return (byte32Array(*vals),) # in typle for consystemcy with other functions
             
         except:
-            print("error")
+            # print("error")
             return None
 
     @classmethod
@@ -147,8 +147,8 @@ class ORESecretKey(ctypes.Structure):
 
             return (me,key,params)
         except:
-            traceback.print_exc()
-            print("error")
+            # traceback.print_exc()
+            # print("error")
             return None
 
     @classmethod
@@ -182,7 +182,7 @@ class ORECiphertext(ctypes.Structure):
         # params = OREParams(self.params)
         params = self.params
         buf_size = params.buff_size()
-        print(buf_size)
+        # print(buf_size)
         # print(params.initialized,params.nbits,params.out_blk_len)
 
 
@@ -308,7 +308,7 @@ class OREComparable:
 
     def __eq__(self, other):
         comp = self._cmp(other)
-        print(comp)
+        # print(comp)
         return self._cmp(other) == 0
 
     def _cmp(self, other: "OREComparable") -> int:
