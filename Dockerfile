@@ -2,7 +2,8 @@ FROM ubuntu:18.04
 
 
 # install requirements 
-RUN apt update && apt install --yes build-essential flex bison wget subversion m4 python3 python3-dev python3-setuptools libgmp-dev libssl-dev clang python3-pip python3-venv vim checkinstall zlib1g-dev git
+RUN apt update && apt install --yes build-essential flex bison wget subversion m4 libgmp-dev libssl-dev clang vim checkinstall zlib1g-dev git
+RUN apt install --yes python3 python3-dev python3-setuptools python3-pip python3-venv
 RUN wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && tar xvf pbc-0.5.14.tar.gz && cd /pbc-0.5.14 && ./configure LDFLAGS="-lgmp" && make && make install && ldconfig
 
 # install python crypto charms
@@ -38,3 +39,7 @@ COPY ./priv-libs /priv-libs
 
 
 # --prefix=/priv-libs/env/lib/python3.6/site-packages
+
+
+
+

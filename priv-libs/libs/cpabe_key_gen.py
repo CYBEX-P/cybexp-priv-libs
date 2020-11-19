@@ -95,10 +95,15 @@ def _gen_cpabe_org_secret_key(cpabe_alg, pk_mk, org_name, org_attributes,key_pat
     print(f"\tSaved to {key_path}!")
     return sk
 
+
+def load_cpabe_org_secret_key_from_name(cpabe_alg, org_name):
+    algname = cpabe_alg.alg.__class__.__name__
+    key_path = f"/secrets/cpabe-sk-{algname}-{org_name}.binary"
+    return load_cpabe_org_secret_key(cpabe_alg, key_path)
+
 def gen_cpabe_org_secret_key(cpabe_alg, pk_mk, org_name, org_attributes,force=False,key_path=None):
     algname = cpabe_alg.alg.__class__.__name__
 
-    keychain = {}
     if not key_path:
         key_path = f"/secrets/cpabe-sk-{algname}-{org_name}.binary"
     try:
