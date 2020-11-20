@@ -97,11 +97,11 @@ record["cpabe_dest_ip"] = cpabe_alg.cpabe_encrypt_serialize(
     "UNR and ITOPS"
 )
 
-record["cpabe_raw_dest_ip"] = cpabe_alg.cpabe_encrypt_raw(
-    cpabe_pubkey, 
-    plain.encode("UTF-8"), 
-    "UNR and ITOPS"
-)
+# record["cpabe_raw_dest_ip"] = cpabe_alg.cpabe_encrypt_raw(
+#     cpabe_pubkey, 
+#     plain.encode("UTF-8"), 
+#     "UNR and ITOPS"
+# )
 
 # ======================== READER org b
 #     "UNR-CISO": ["UNR", "SecEng", "IT-Ops", "CICI-Affiliate"],
@@ -116,14 +116,14 @@ cpabe_secretkey = secret_keychain_bsw07["UNRCISO"]
 open("enc_raw.bin", 'wb').write(cpabe_alg.serialize_charm_obj(record["cpabe_raw_dest_ip"]))
 ciphertext_r = cpabe_alg.deserialize_charm_obj(open("enc_raw.bin", 'rb').read())
 
-# open("enc.bin", 'wb').write(record["cpabe_dest_ip"])
-# ciphertext = open("enc.bin", 'rb').read()
+open("enc.bin", 'wb').write(record["cpabe_dest_ip"])
+ciphertext = open("enc.bin", 'rb').read()
 
 # print("raw enc:", pickle.loads(ciphertext))
 # print("\n")
 
-# dec_p = cpabe_alg.cpabe_decrypt_deserialize(cpabe_pubkey, cpabe_secretkey, ciphertext).decode()
-dec_p = cpabe_alg.cpabe_decrypt_raw(cpabe_pubkey, cpabe_secretkey, ciphertext_r).decode()
+dec_p = cpabe_alg.cpabe_decrypt_deserialize(cpabe_pubkey, cpabe_secretkey, ciphertext).decode()
+# dec_p = cpabe_alg.cpabe_decrypt_raw(cpabe_pubkey, cpabe_secretkey, ciphertext_r).decode()
 
 # pprint(record)
 

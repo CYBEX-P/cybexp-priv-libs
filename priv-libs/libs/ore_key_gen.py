@@ -130,7 +130,7 @@ def gen_ore_key_rand():
             export_cipher_test(secret_key_candidate)
 
         except KeyboardInterrupt:
-            break
+            raise KeyboardInterrupt
         except:
             # print("trying new key")
             # traceback.print_exc()

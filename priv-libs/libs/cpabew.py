@@ -19,6 +19,8 @@ def is_pickle(obj):
 
     except _pickle.UnpicklingError:
         return False
+    except KeyboardInterrupt:
+        raise KeyboardInterrupt
     return True
 
 class CPABEAlg:

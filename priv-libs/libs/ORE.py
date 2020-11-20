@@ -55,6 +55,8 @@ class OREParams(ctypes.Structure):
                 return None
             vals = struct.unpack(cls.struct_format,raw_bytes)
             return vals
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt
         except:
             # print("error")
             return None
@@ -106,7 +108,8 @@ class PRFKey(ctypes.Structure):
             byte32Array = ctypes.c_byte * 32
             # conversion to ctype array, else __init__ fails
             return (byte32Array(*vals),) # in typle for consystemcy with other functions
-            
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt
         except:
             # print("error")
             return None
@@ -146,6 +149,8 @@ class ORESecretKey(ctypes.Structure):
             params = OREParams.unpack_vals(raw_params)
 
             return (me,key,params)
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt
         except:
             # traceback.print_exc()
             # print("error")
@@ -223,6 +228,8 @@ class ORECiphertext(ctypes.Structure):
             buff_p = ctypes.c_char_p(bytes_buff)
 
             return (me,buff_p,params)
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt
         except:
             traceback.print_exc()
             print("error")
