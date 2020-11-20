@@ -81,3 +81,8 @@ def post_enc_data(base_url,data):
    except:
       traceback.print_exc()
       return False
+
+def query_enc_data(base_url, val=None, left_epoch=None, right_epoch=None):
+   pass
+
+   
