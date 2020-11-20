@@ -9,3 +9,4 @@ tqdm            # Progress bars uWu
 py-abac         # ABAC framework to compare with CP-ABE
 py-abac[mongo]  # ABAC state mgmt
 py-abac[sql]    # ABAC state mgmt
+requests        # make http(s) requests
