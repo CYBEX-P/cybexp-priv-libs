@@ -83,7 +83,7 @@ def get_org_cpabe_secret(kms_api_base, name, debug=False):
 def post_enc_data(base_url,data, debug=False):  
    try:
       if type(data["index"]) != list or len(data)<=0:
-         return None
+         return False
       ser_data = pickle.dumps(data)
       r = requests.post(url=base_url+"/add/enc-data",
                           data=ser_data,
@@ -100,7 +100,49 @@ def post_enc_data(base_url,data, debug=False):
          traceback.print_exc()
       return False
 
-def query_enc_data(base_url, val=None, left_epoch=None, right_epoch=None, debug=False):
-   pass
+def query_enc_data(base_url, enc_val, enc_left_epoch=None, enc_right_epoch=None, debug=False):
+   try:
+      if type(enc_val) != bytes:
+         return None
+      if type(enc_left_epoch) != bytes and enc_left_epoch != None:
+         return None
+      if type(enc_right_epoch) != bytes and enc_right_epoch != None:
+         return None
+      data = {"index": enc_val}
+      if enc_left_epoch:
+         data["time_left"] = enc_left_epoch
+      if enc_right_epoch:
+         data["time_right"] = enc_right_epoch
+
+      ser_data = pickle.dumps(data)
+      r = requests.post(url=base_url+"/query",
+                          data=ser_data,
+                          headers={'Content-Type': 'application/octet-stream'})
+      
+      if r.status_code >= 300:
+         if debug:
+            print("status code:", r.status_code)
+         return None
+      return r.content
+
+   except KeyboardInterrupt:
+      raise KeyboardInterrupt
+   except:
+      if debug:
+         traceback.print_exc()
+      return None
 
    
+def list_all_attributes():
+   try:
+      r = requests.get(url=kms_api_base+"/get/attributes")
+      if r.status_code >= 300:
+         return None
+      return r.content
+
+   except KeyboardInterrupt:
+      raise KeyboardInterrupt
+   except:
+      if debug:
+         traceback.print_exc()
+      return None
