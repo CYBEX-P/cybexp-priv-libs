@@ -42,6 +42,8 @@ org_abac_attributes = {
 
 
 cpabe_alg = CPABEAlg()
+cpabe_alg_dec = CPABEAlg()
+
 pk_mk = gen_cpabe_master_keys(cpabe_alg)
 secret_keychain_bsw07 = gen_cpabe_for_orgs(cpabe_alg, pk_mk, org_abac_attributes)
 
@@ -93,7 +95,8 @@ plain = record["dest_ip"]
 
 record["cpabe_dest_ip"] = cpabe_alg.cpabe_encrypt_serialize(
     cpabe_pubkey, 
-    plain.encode("UTF-8"), 
+    # plain.encode("UTF-8"),
+    plain.encode(), 
     "UNR and ITOPS"
 )
 
@@ -108,13 +111,14 @@ record["cpabe_dest_ip"] = cpabe_alg.cpabe_encrypt_serialize(
 import pickle
 
 cpabe_secretkey = secret_keychain_bsw07["UNRCISO"]
-#cpabe_secretkey = secret_keychain_bsw07["UNRCSE"]
+
+cpabe_secretkey_wrong = secret_keychain_bsw07["UNRCSE"]
 
 
 # ciphertext = record["cpabe_dest_ip"]
 
-open("enc_raw.bin", 'wb').write(cpabe_alg.serialize_charm_obj(record["cpabe_raw_dest_ip"]))
-ciphertext_r = cpabe_alg.deserialize_charm_obj(open("enc_raw.bin", 'rb').read())
+# open("enc_raw.bin", 'wb').write(cpabe_alg.serialize_charm_obj(record["cpabe_raw_dest_ip"]))
+# ciphertext_r = cpabe_alg.deserialize_charm_obj(open("enc_raw.bin", 'rb').read())
 
 open("enc.bin", 'wb').write(record["cpabe_dest_ip"])
 ciphertext = open("enc.bin", 'rb').read()
@@ -122,7 +126,7 @@ ciphertext = open("enc.bin", 'rb').read()
 # print("raw enc:", pickle.loads(ciphertext))
 # print("\n")
 
-dec_p = cpabe_alg.cpabe_decrypt_deserialize(cpabe_pubkey, cpabe_secretkey, ciphertext).decode()
+dec_p = cpabe_alg_dec.cpabe_decrypt_deserialize(cpabe_pubkey, cpabe_secretkey, ciphertext).decode()
 # dec_p = cpabe_alg.cpabe_decrypt_raw(cpabe_pubkey, cpabe_secretkey, ciphertext_r).decode()
 
 # pprint(record)
@@ -134,6 +138,13 @@ print("\n")
 assert dec_p == plain, "Failed to decrypt! (decrypted incorrectly)"
 print("it worked!!")
 
+
+print("\ntesting decrypt with wrong keys")
+try:
+   dec_p_wrong = cpabe_alg_dec.cpabe_decrypt_deserialize(cpabe_pubkey, cpabe_secretkey_wrong, ciphertext).decode()
+   sys.exit("it failed, decrypted when it shoulnt")
+except Exception:
+   print("passed")
 
 # # In[19]:
 # enc = RSADOAEP(2048)
