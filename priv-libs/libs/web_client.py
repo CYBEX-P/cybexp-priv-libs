@@ -11,8 +11,8 @@ import pickle
 from cpabew import CPABEAlg
 from ORE import ORESecretKey
 
-backend_api_base = "http://localhost:5001"
-kms_api_base = "http://localhost:5002"
+# backend_api_base = "http://localhost:5001"
+# kms_api_base = "http://localhost:5002"
 
 
 
@@ -68,7 +68,7 @@ def get_org_cpabe_secret(kms_api_base, name, debug=False):
    try:
       bsw07 = CPABEAlg()
       req_body = {"name": name}
-      r = requests.get(url=kms_api_base+"/get/key/cpabe-sk", json=req_body)
+      r = requests.post(url=kms_api_base+"/get/key/cpabe-sk", json=req_body)
       raw_key = r.content
       key = bsw07.deserialize_charm_obj(raw_key)
       return key
@@ -100,7 +100,7 @@ def post_enc_data(base_url,data, debug=False):
          traceback.print_exc()
       return False
 
-def query_enc_data(base_url, enc_val, enc_left_epoch=None, enc_right_epoch=None, debug=False):
+def query_enc_data(base_url, enc_val, enc_left_epoch=None, enc_right_epoch=None, left_inclusive=None, right_inclusive=None, debug=False):
    try:
       if type(enc_val) != bytes:
          return None
@@ -108,13 +108,24 @@ def query_enc_data(base_url, enc_val, enc_left_epoch=None, enc_right_epoch=None,
          return None
       if type(enc_right_epoch) != bytes and enc_right_epoch != None:
          return None
+      if type(left_inclusive) != bool and left_inclusive != None:
+         return None
+      if type(right_inclusive) != bool and right_inclusive != None:
+         return None
+
       data = {"index": enc_val}
       if enc_left_epoch:
          data["time_left"] = enc_left_epoch
       if enc_right_epoch:
          data["time_right"] = enc_right_epoch
 
+      if left_inclusive:
+         data["left_inclusive"] = left_inclusive
+      if right_inclusive:
+         data["right_inclusive"] = right_inclusive
+
       ser_data = pickle.dumps(data)
+      # print(ser_data)
       r = requests.post(url=base_url+"/query",
                           data=ser_data,
                           headers={'Content-Type': 'application/octet-stream'})
@@ -133,7 +144,7 @@ def query_enc_data(base_url, enc_val, enc_left_epoch=None, enc_right_epoch=None,
       return None
 
    
-def list_all_attributes():
+def list_all_attributes(kms_api_base):
    try:
       r = requests.get(url=kms_api_base+"/get/attributes")
       if r.status_code >= 300:

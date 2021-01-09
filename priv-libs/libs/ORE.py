@@ -271,10 +271,6 @@ class ORELibError(Exception):
             msg = f"UNKNOWN ERR (={code})"
         return ORELibError(msg)
 
-
-
-
-
 class OREComparable:
     def __init__(self, ciphertext_obj: ORECiphertext):
         ct_is_ready = ciphertext_obj.params.initialized and ciphertext_obj.initialized
@@ -313,10 +309,18 @@ class OREComparable:
     def __lt__(self, other):
         return self._cmp(other) == -1
 
+    def __gt__(self, other):
+        return self._cmp(other) == 1
+
     def __eq__(self, other):
         comp = self._cmp(other)
         # print(comp)
         return self._cmp(other) == 0
+
+    def __le__(self, other):
+        return self.__lt__(other) or self.__eq__(other)
+    def __ge__(self, other):
+        return self.__gt__(other) or self.__eq__(other)
 
     def _cmp(self, other: "OREComparable") -> int:
         assert type(other) == OREComparable, f"{other} is not a ciphertext"

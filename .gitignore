@@ -1,2 +1,4 @@
 secrets/*
-!secrests/test.file
+!secrests/keeo_this_file
+
+**/__pycache__
