@@ -107,7 +107,7 @@ def post_enc_data(base_url,data, auth=None, debug=False):
       ser_data = pickle.dumps(data)
       r = requests.post(url=base_url+"/add/enc-data",
                           data=ser_data,
-                          headers={'Content-Type': 'application/octet-stream'}
+                          headers={'Content-Type': 'application/octet-stream'},
                           **kw_auth)
       
       if r.status_code >= 300:
