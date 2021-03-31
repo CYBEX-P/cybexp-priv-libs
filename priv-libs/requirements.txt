@@ -1,7 +1,7 @@
 cryptography    # Some block ciphers and RSA key generation
 jsonlines       # Data loading format  and import json files
 matplotlib      # Plotting
-numpy           # Statistics
+numpy           # Statistics, random float generation
 PyCryptodome    # RSA OAEP mode
 pymongo         # Connect to MongoDB
 qcore           # Accurate timing/benchmarking
