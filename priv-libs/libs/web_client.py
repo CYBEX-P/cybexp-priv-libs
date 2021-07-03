@@ -137,7 +137,7 @@ def post_enc_data(base_url,data, auth=None, debug=False):
          traceback.print_exc()
       return False
 
-def query_enc_data(base_url, enc_val,
+def query_enc_data(base_url, enc_val, query_type="search",
                   enc_left_epoch=None, enc_right_epoch=None,
                   left_inclusive=None, right_inclusive=None,
                   auth=None, debug=False):
@@ -153,11 +153,14 @@ def query_enc_data(base_url, enc_val,
       if type(right_inclusive) != bool and right_inclusive != None:
          return None
 
+      if not (query_type == "search" or query_type == "count"):
+         return None
+
       kw_auth = {}
       if auth != None:
          kw_auth["auth"] = auth
 
-      data = {"index": enc_val}
+      data = {"query_type": query_type, "index": enc_val}
       if enc_left_epoch:
          data["time_left"] = enc_left_epoch
       if enc_right_epoch:
