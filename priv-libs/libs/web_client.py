@@ -9,7 +9,7 @@ import traceback
 import pickle
 
 from cpabew import CPABEAlg
-from ORE import ORESecretKey
+# from ORE import ORESecretKey
 
 
 def get_de_key(kms_api_base,token ,auth=None, debug=False):
@@ -49,7 +49,8 @@ def get_ore_key(kms_api_base,token, auth=None, debug=False):
    try:
       r = requests.get(url=kms_api_base+"/get/key/ore", headers=hed, **kw_auth)
       raw_key = r.content
-      key = ORESecretKey.from_raw_bytes(raw_key)
+      # key = ORESecretKey.from_raw_bytes(raw_key)
+      key = raw_key
       return key
    except KeyboardInterrupt:
       raise KeyboardInterrupt
@@ -144,9 +145,9 @@ def query_enc_data(base_url, enc_val, query_type="search",
    try:
       if type(enc_val) != bytes:
          return None
-      if type(enc_left_epoch) != bytes and enc_left_epoch != None:
+      if type(enc_left_epoch) != int and enc_left_epoch != None:
          return None
-      if type(enc_right_epoch) != bytes and enc_right_epoch != None:
+      if type(enc_right_epoch) != int and enc_right_epoch != None:
          return None
       if type(left_inclusive) != bool and left_inclusive != None:
          return None
@@ -180,7 +181,7 @@ def query_enc_data(base_url, enc_val, query_type="search",
       
       if r.status_code >= 300:
          if debug:
-            print("status code:", r.status_code)
+            print("status code:", r.status_code, flush=True)
          return None
       return r.content
 
