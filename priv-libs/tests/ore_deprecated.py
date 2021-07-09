@@ -10,7 +10,33 @@ import traceback
 
 from ORE import *
 
+# def local_test():
+#     secret_key = ORESecretKey()
+#     print(secret_key)
+    
+#     orelib.ore_setup(ctypes.byref(secret_key), ctypes.byref(default_ore_params()))
 
+#     vals = [
+#         (chr(c), OREComparable.from_int(c - 96, secret_key))
+#         for c in range(ord("a"), ord("z") + 1)
+#     ]
+
+#     import random
+
+#     random.shuffle(vals)
+#     # print(vals)
+
+#     assert sorted(vals, key=lambda tupl: tupl[1]) == sorted(
+#         vals, key=lambda tupl: tupl[0]
+#     )
+
+#     print("Local Test Passed!")
+#     e = secret_key.export()
+#     print()
+#     print(e)
+#     print()
+#     s2 = ORESecretKey.from_raw_bytes(e)
+#     print(s2)
 
 
 def exp_k_test_helper(secret_key:ORESecretKey=ORESecretKey.from_random()):

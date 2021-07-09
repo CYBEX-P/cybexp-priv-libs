@@ -12,3 +12,5 @@ py-abac[sql]    # ABAC state mgmt
 requests        # make http(s) requests
 
 pyyaml          # load configuration
+
+pyope           # ORE lib

@@ -216,6 +216,30 @@ def list_all_attributes(kms_api_base,token, auth=None):
 
 
 
+def get_ore_params(kms_api_base,token, auth=None):
+   if type(token) != str:
+      return None
+   hed = {'X-Authorization': 'Bearer ' + token}
+
+   kw_auth = {}
+   if auth != None:
+      kw_auth["auth"] = auth
+
+   try:
+      r = requests.get(url=kms_api_base+"/get/range/ore", headers=hed, **kw_auth)
+      if r.status_code >= 300:
+         return None
+      return r.json()
+
+   except KeyboardInterrupt:
+      raise KeyboardInterrupt
+   except:
+      if debug:
+         traceback.print_exc()
+      return None
+
+
+
 def test_auth(api_base, auth):
    r = requests.get(url=api_base+"/", auth=auth)
    if r.status_code >= 300:
